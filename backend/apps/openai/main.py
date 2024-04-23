@@ -80,6 +80,7 @@ async def get_openai_urls(user=Depends(get_admin_user)):
 
 @app.post("/urls/update")
 async def update_openai_urls(form_data: UrlsUpdateForm, user=Depends(get_admin_user)):
+    await get_all_models()
     app.state.OPENAI_API_BASE_URLS = form_data.urls
     return {"OPENAI_API_BASE_URLS": app.state.OPENAI_API_BASE_URLS}
 
@@ -140,7 +141,7 @@ async def speech(request: Request, user=Depends(get_verified_user)):
 
         except Exception as e:
             log.exception(e)
-            error_detail = "Open WebUI: Server Connection Error"
+            error_detail = "IMxr WebAI: Server Connection Error"
             if r is not None:
                 try:
                     res = r.json()
@@ -252,7 +253,7 @@ async def get_models(url_idx: Optional[int] = None, user=Depends(get_current_use
             return response_data
         except Exception as e:
             log.exception(e)
-            error_detail = "Open WebUI: Server Connection Error"
+            error_detail = "IMxr WebAI: Server Connection Error"
             if r is not None:
                 try:
                     res = r.json()
@@ -336,12 +337,12 @@ async def proxy(path: str, request: Request, user=Depends(get_verified_user)):
             return response_data
     except Exception as e:
         log.exception(e)
-        error_detail = "Open WebUI: Server Connection Error"
+        error_detail = "IMxr WebAI: Server Connection Error"
         if r is not None:
             try:
                 res = r.json()
                 if "error" in res:
-                    error_detail = f"External: {res['error']}"
+                    error_detail = f"External: {res['error']['message'] if 'message' in res['error'] else res['error']}"
             except:
                 error_detail = f"External: {e}"
 

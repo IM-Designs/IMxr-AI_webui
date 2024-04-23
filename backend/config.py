@@ -70,7 +70,7 @@ try:
 except ImportError:
     log.warning("dotenv not installed, skipping...")
 
-WEBUI_NAME = os.environ.get("WEBUI_NAME", "Open WebUI")
+WEBUI_NAME = os.environ.get("WEBUI_NAME", "IMxr WebAI")
 WEBUI_FAVICON_URL = "https://openwebui.com/favicon.png"
 
 ####################################
@@ -196,8 +196,8 @@ if CUSTOM_NAME:
         log.exception(e)
         pass
 else:
-    if WEBUI_NAME != "Open WebUI":
-        WEBUI_NAME += " (Open WebUI)"
+    if WEBUI_NAME != "IMxr WebAI":
+        WEBUI_NAME += " (IMxr WebAI)"
 
 
 ####################################
@@ -279,7 +279,7 @@ if OLLAMA_BASE_URL == "" and OLLAMA_API_BASE_URL != "":
 if ENV == "prod":
     if OLLAMA_BASE_URL == "/ollama" and not K8S_FLAG:
         if USE_OLLAMA_DOCKER.lower() == "true":
-            # if you use all-in-one docker container (Open WebUI + Ollama)
+            # if you use all-in-one docker container (IMxr WebAI + Ollama)
             # with the docker build arg USE_OLLAMA=true (--build-arg="USE_OLLAMA=true") this only works with http://localhost:11434
             OLLAMA_BASE_URL = "http://localhost:11434"
         else:
@@ -320,6 +320,18 @@ OPENAI_API_BASE_URLS = [
     url.strip() if url != "" else "https://api.openai.com/v1"
     for url in OPENAI_API_BASE_URLS.split(";")
 ]
+
+OPENAI_API_KEY = ""
+
+try:
+    OPENAI_API_KEY = OPENAI_API_KEYS[
+        OPENAI_API_BASE_URLS.index("https://api.openai.com/v1")
+    ]
+except:
+    pass
+
+OPENAI_API_BASE_URL = "https://api.openai.com/v1"
+
 
 ####################################
 # WEBUI
@@ -447,6 +459,9 @@ And answer according to the language of the user's question.
 Given the context information, answer the query.
 Query: [query]"""
 
+RAG_OPENAI_API_BASE_URL = os.getenv("RAG_OPENAI_API_BASE_URL", OPENAI_API_BASE_URL)
+RAG_OPENAI_API_KEY = os.getenv("RAG_OPENAI_API_KEY", OPENAI_API_KEY)
+
 ####################################
 # Transcribe
 ####################################
@@ -467,3 +482,11 @@ ENABLE_IMAGE_GENERATION = (
 )
 AUTOMATIC1111_BASE_URL = os.getenv("AUTOMATIC1111_BASE_URL", "")
 COMFYUI_BASE_URL = os.getenv("COMFYUI_BASE_URL", "")
+
+
+####################################
+# Audio
+####################################
+
+AUDIO_OPENAI_API_BASE_URL = os.getenv("AUDIO_OPENAI_API_BASE_URL", OPENAI_API_BASE_URL)
+AUDIO_OPENAI_API_KEY = os.getenv("AUDIO_OPENAI_API_KEY", OPENAI_API_KEY)
