@@ -61,7 +61,7 @@
 					'https://ollamahub.com',
 					'https://www.ollamahub.com',
 					'https://openwebui.com',
-					'https://www.openwebui.com',
+					'https://www.imxr.io',
 					'http://localhost:5173'
 				].includes(event.origin)
 			)
